@@ -1,5 +1,5 @@
 # SwiftDropdownMenu
-A Swift version of [nmattisson DropdownMenu](https://github.com/nmattisson/DropdownMenu)
+A Swift version of [nmattisson/DropdownMenu](https://github.com/nmattisson/DropdownMenu)
 
 ## Implimentation
 
