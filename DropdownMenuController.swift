@@ -265,22 +265,63 @@ class DropdownMenuController: UIViewController {
         }
     }
     
+//  MARK: - Rotation
+    
+    func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
+        super.didRotateFromInterfaceOrientation(fromInterfaceOrientation)
+        
+        var menuFrame: CGRect = self.menu.frame
+        menuFrame.origin.y = self.menubar.frame.size.height - self.offset
+        self.menu.frame = menuFrame
+        
+        self.drawClosedLayer()
+        self.drawOpenLayer()
+        
+        if self.menu.hidden {
+            self.view().layer().addSublayer(closedMenuShape)
+        }
+        else {
+            if shouldDisplayDropShape {
+                self.view().layer().addSublayer(openMenuShape)
+            }
+        }
+    }
+    
+    func willRotateToInterfaceOrientation(toInterfaceOrientation: UIInterfaceOrientation, duration: NSTimeInterval) {
+        super.willRotateToInterfaceOrientation(toInterfaceOrientation, duration: duration)
+        
+        closedMenuShape.removeFromSuperlayer()
+        openMenuShape.removeFromSuperlayer()
+    }
+    
+//  MARK: - Segues
+    
+    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject) {
+        self.currentSegueIdentifier = segue.identifier
+        super.prepareForSegue(segue, sender: sender)
+    }
+    
+    func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject) -> Bool {
+        if self.currentSegueIdentifier.isEqual(identifier) {
+            //Don't perform segue, if visible ViewController is already the destination ViewController
+            return false
+        }
+        return true
+    }
+    
     /*--------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+//  MARK: - Memory Warning
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
+
+
+
+
+
+
