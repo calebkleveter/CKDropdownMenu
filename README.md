@@ -1,6 +1,10 @@
 # SwiftDropdownMenu
 A Swift version of [nmattisson DropdownMenu](https://github.com/nmattisson/DropdownMenu)
 
+## Implimentation
+
+You will want to add the individual files to a project, *not* use the xcode project.
+
 ## License
 
 The MIT License (MIT)
