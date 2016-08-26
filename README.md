@@ -5,6 +5,8 @@
 [![License](https://img.shields.io/cocoapods/l/CKDropdownMenu.svg?style=flat)](http://cocoapods.org/pods/CKDropdownMenu)
 [![Platform](https://img.shields.io/cocoapods/p/CKDropdownMenu.svg?style=flat)](http://cocoapods.org/pods/CKDropdownMenu)
 
+A Swift version of [nmattisson/DropdownMenu](https://github.com/nmattisson/DropdownMenu).
+
 ## Example
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
