@@ -1,0 +1,6 @@
+use_frameworks!
+target 'CKDropdownMenu_Tests' do
+  pod 'CKDropdownMenu', :path => '../'
+  
+  
+end
