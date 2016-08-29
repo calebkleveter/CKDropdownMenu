@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
 s.name             = 'CKDropdownMenu'
 s.version          = '1.0.0'
-s.summary          = 'A Swift version of nmattisson's DropdownMenu.'
+s.summary          = "A Swift version of nmattisson's DropdownMenu."
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -28,7 +28,7 @@ s.author           = { 'Caleb' => 'caleb.kleveter@gmail.com' }
 s.source           = { :git => 'https://github.com/calebkleveter/CKDropdownMenu.git', :tag => s.version.to_s }
 # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-s.ios.deployment_target = '6.0'
+s.ios.deployment_target = '9.0'
 
 s.source_files = 'CKDropdownMenu/Classes/**/*'
 

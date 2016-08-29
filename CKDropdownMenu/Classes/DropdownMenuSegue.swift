@@ -9,16 +9,31 @@
 import Foundation
 import UIKit
 
-class DropdownMenuSegue: UIStoryboardSegue {
-    override func perform() {
-        let containerViewController: DropdownMenuController = (self.sourceViewController as! DropdownMenuController)
-        let nextViewController: UIViewController = (self.destinationViewController )
-        let currentViewController: UIViewController
-        if let currentControler = containerViewController.currentViewController {
-            currentViewController = currentControler
+public class DropdownMenuSegue: UIStoryboardSegue {
+    
+    public var containerViewController: DropdownMenuController
+    public var nextViewController: UIViewController
+    public var currentViewController: UIViewController
+    
+    init(containerViewController: DropdownMenuController, currentViewController: UIViewController, nextViewController: UIViewController) {
+        self.containerViewController = containerViewController
+        self.nextViewController = nextViewController
+        self.currentViewController = currentViewController
+        super.init(identifier: nil, source: currentViewController, destination: nextViewController)
+        self.containerViewController = (self.sourceViewController as! DropdownMenuController)
+        self.nextViewController = (self.destinationViewController)
+    }
+    
+    public override func perform() {
+        
+        var currentController: UIViewController
+        
+        if let controller = containerViewController.currentViewController {
+            currentController = controller
         } else {
             return
         }
+
         // Add nextViewController as child of container view controller.
         containerViewController.addChildViewController(nextViewController)
         // Tell current View controller that it will be removed.
@@ -30,9 +45,9 @@ class DropdownMenuSegue: UIStoryboardSegue {
         // Make the transition with a very short Cross disolve animation
         containerViewController.transition(from: currentViewController, to: nextViewController, duration: 0.1, options: .transitionCrossDissolve, animations: {() -> Void in
             }, completion: {(finished: Bool) -> Void in
-                containerViewController.currentViewController = nextViewController
-                currentViewController.removeFromParentViewController()
-                nextViewController.didMove(toParentViewController: containerViewController)
+                currentController = self.nextViewController
+                self.currentViewController.removeFromParentViewController()
+                self.nextViewController.didMove(toParentViewController: self.containerViewController)
         })
     }
 }
