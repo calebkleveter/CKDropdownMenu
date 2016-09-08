@@ -11,7 +11,7 @@ import UIKit
 
 /**
  A UIViewController that works as a dropdown menu
-*/
+ */
 public class DropdownMenuController: UIViewController {
     
     /// The dropdown's container. This is the view that the dropdown is for.
@@ -45,11 +45,16 @@ public class DropdownMenuController: UIViewController {
     public private(set) var openMenuShape: CAShapeLayer = CAShapeLayer()
     public private(set) var closedMenuShape: CAShapeLayer = CAShapeLayer()
     
+    private var originalMenuFrame: CGRect!
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
+        print(menu.frame)
+        originalMenuFrame = menu.frame
         shouldDisplayDropShape = true
         fadeAlpha = 0.5
         trianglePlacement = 0.87
+        menu.isHidden = true
     }
     
     public override func viewDidAppear(_ animated: Bool) {
@@ -59,31 +64,33 @@ public class DropdownMenuController: UIViewController {
         // Draw the shapes for the open and close menu triangle.
         self.drawOpenLayer()
         self.drawClosedLayer()
+        print(menu.frame)
+        originalMenuFrame = menu.frame
     }
     
     /**
      Enables/Disables the 'drop' triangle from displaying when down.
      
      - parameter shouldShow: Sets whether or not the dropdown triangle should show when the menu is activated.
-    */
-    public func dropShapeShouldShowWhenOpen(shouldShow: Bool) {
+     */
+    public func dropShapeShouldShowWhenOpen(_ shouldShow: Bool) {
         shouldDisplayDropShape = shouldShow
     }
     
-    /** 
+    /**
      Sets the color that background content will fade to when the menu is opened.
      
      - parameter color: The color of the tint when the menu is activated.
-    */
+     */
     public func setFadeTint(withColor color: UIColor) {
         self.view.backgroundColor = color
     }
     
     /**
      Sets the amount of fade that should be applied to background content when menu is open.
-    
+     
      - parameter alphaVal: How much the background will fade when the mnu is activated.activated
-    */
+     */
     public func setFadeAmount(withAlpha alphaVal: Float) {
         fadeAlpha = alphaVal
     }
@@ -92,7 +99,7 @@ public class DropdownMenuController: UIViewController {
      Sets the placement of the dropdown triangle along the menu bar when the menu is activated.
      
      - parameter trianglePlacementVal: The position along the menu bar where the triangle is placed.
-    */
+     */
     public func setTrianglePosition(_ trianglePlacementVal: Float) {
         trianglePlacement = trianglePlacementVal
     }
@@ -101,7 +108,7 @@ public class DropdownMenuController: UIViewController {
      Sets the title on the menu bar.
      
      - parameter menubarTitle: The title that is used for the menu bar.
-    */
+     */
     public func setMenubarTitle(_ menubarTitle: String) {
         self.titleLabel.text = menubarTitle
     }
@@ -110,7 +117,7 @@ public class DropdownMenuController: UIViewController {
      Sets the background color of the menu bar.
      
      - parameter color: The color of the menu bar.
-    */
+     */
     public func setMenubarBackground(_ color: UIColor) {
         self.menubar.backgroundColor = color
     }
@@ -119,8 +126,9 @@ public class DropdownMenuController: UIViewController {
      The action for the button that opens and closes the menu.
      
      - parameter sender: The button that fired th action.
-    */
+     */
     @IBAction public func menuButtonAction(_ sender: UIButton) {
+        print("Button was pressed.")
         self.toggleMenu()
     }
     
@@ -128,7 +136,7 @@ public class DropdownMenuController: UIViewController {
      An action for the buttons in the menu to close the menu when a button is pressed.
      
      - parameter sender: The button that was pressed.
-    */
+     */
     @IBAction public func listButtonAction(_ sender: UIButton) {
         self.hideMenu()
     }
@@ -137,9 +145,11 @@ public class DropdownMenuController: UIViewController {
     public func toggleMenu() {
         if self.menu.isHidden {
             self.showMenu()
+            print("Menu will show")
         }
         else {
             self.hideMenu()
+            print("Menu will hide")
         }
     }
     
@@ -156,13 +166,14 @@ public class DropdownMenuController: UIViewController {
         menuFrame.origin.y = self.menubar.frame.size.height - self.offset()
         // Set new alpha of Container View (to get fade effect)
         let containerAlpha: Float = fadeAlpha
-        
+        print(menu.frame)
         UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 4.0, options: [.curveEaseIn, .curveEaseOut], animations: {() -> Void in
             self.menu.frame = menuFrame
             self.container.alpha = CGFloat(containerAlpha)
+            print("Animation occured. Menu frame: \(self.menu.frame)")
             }, completion: {(finished: Bool) -> Void in
         })
-
+        
         UIView.commitAnimations()
     }
     
@@ -176,14 +187,15 @@ public class DropdownMenuController: UIViewController {
         menuFrame.origin.y = self.menubar.frame.size.height - menuFrame.size.height
         // Set new alpha of Container View (to get fade effect)
         let containerAlpha: Float = 1.0
-        
+        print(menu.frame)
         UIView.animate(withDuration: 0.3, delay: 0.05, usingSpringWithDamping: 1.0, initialSpringVelocity: 4.0, options: [.curveEaseIn, .curveEaseOut], animations: {() -> Void in
-            self.menu.frame = menuFrame
+            self.menu.frame = self.originalMenuFrame
             self.container.alpha = CGFloat(containerAlpha)
+            print("Animation occured. Menu frame: \(self.menu.frame)")
             }, completion: {(finished: Bool) -> Void in
                 self.menu.isHidden = true
         })
-
+        
         UIView.commitAnimations()
     }
     
@@ -206,7 +218,7 @@ public class DropdownMenuController: UIViewController {
         var interfaceOrientation: UIInterfaceOrientation
         // Check if we are running an iOS version that support `interfaceOrientation`
         // Otherwise, use statusBarOrientation.
-
+        
         interfaceOrientation = UIApplication.shared().statusBarOrientation
         
         if interfaceOrientation == .landscapeLeft || interfaceOrientation == .landscapeRight {
@@ -272,7 +284,7 @@ public class DropdownMenuController: UIViewController {
         closedMenuShape.position = CGPoint(x: 0.0, y: -self.offset())
     }
     
-    @IBAction public func displayGestureForTapRecognizer(recognizer: UITapGestureRecognizer) {
+    @IBAction public func displayGestureForTapRecognizer(_ recognizer: UITapGestureRecognizer) {
         // Get the location of the gesture
         let tapLocation: CGPoint = recognizer.location(in: self.view!)
         // NSLog(@"Tap location X:%1.0f, Y:%1.0f", tapLocation.x, tapLocation.y);
@@ -281,29 +293,6 @@ public class DropdownMenuController: UIViewController {
             self.hideMenu()
         }
     }
-    
-    //    override func didRotate(from fromInterfaceOrientation: UIInterfaceOrientation) {
-    //        super.didRotate(from: fromInterfaceOrientation)
-    //        var menuFrame: CGRect = self.menu.frame
-    //        menuFrame.origin.y = self.menubar.frame.size.height - self.offset()
-    //        self.menu.frame = menuFrame
-    //        self.drawClosedLayer()
-    //        self.drawOpenLayer()
-    //        if self.menu.isHidden {
-    //            self.view!.layer.addSublayer(closedMenuShape)
-    //        }
-    //        else {
-    //            if shouldDisplayDropShape {
-    //                self.view!.layer.addSublayer(openMenuShape)
-    //            }
-    //        }
-    //    }
-    
-    //    func willRotateToInterfaceOrientation(toInterfaceOrientation: UIInterfaceOrientation, duration: TimeInterval) {
-    //        super.willRotate(to: toInterfaceOrientation, duration: duration)
-    //        closedMenuShape.removeFromSuperlayer()
-    //        openMenuShape.removeFromSuperlayer()
-    //    }
     
     
     public override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -330,14 +319,14 @@ public class DropdownMenuController: UIViewController {
         openMenuShape.removeFromSuperlayer()
     }
     
-    public func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject) {
+    public override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
         if let identifier = segue.identifier {
             self.currentSegueIdentifier = identifier
             super.prepare(for: segue, sender: sender)
         }
     }
     
-    public func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject) -> Bool {
+    public override func shouldPerformSegue(withIdentifier identifier: String, sender: AnyObject?) -> Bool {
         if self.currentSegueIdentifier.isEqual(identifier) {
             //Dont perform segue, if visible ViewController is already the destination ViewController
             return false
