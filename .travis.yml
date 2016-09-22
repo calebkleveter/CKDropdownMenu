@@ -6,9 +6,10 @@ osx_image: xcode8
 language: objective-c
 # cache: cocoapods
 # podfile: Example/Podfile
-# before_install:
-# - gem install cocoapods # Since Travis is not always on latest version
-# - pod install --project-directory=Example
+before_install:
+# Force bundler 1.12.5 because version 1.13 has issues, see https://github.com/fastlane/fastlane/issues/6065#issuecomment-246044617
+- gem uninstall bundler -v '>1.12.5' --force || echo "bundler >1.12.5 is not installed"
+- gem install bundler -v 1.12.5 --no-rdoc --no-ri --no-document --quiet
 script:
-- set -o pipefail && xcodebuild test -workspace Example/CKDropdownMenu.xcworkspace -scheme CKDropdownMenu-Example -sdk iphonesimulator9.3 ONLY_ACTIVE_ARCH=NO | xcpretty
+- set -o pipefail && xcodebuild test -workspace Example/CKDropdownMenu.xcworkspace -scheme CKDropdownMenu-Example -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO | xcpretty
 - pod lib lint
